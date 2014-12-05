@@ -12,7 +12,6 @@ Written by: Nadir Hamid
 
 import time
 import json
-import uuid
 import sys
 import os
 import pprint
@@ -40,9 +39,6 @@ class Entity(object):
 	def get_position():
 		return dict(x=self.x, y=self.y, z=self.z)
 
-	def to_dict(self):
-		return dict(w=self.w, h=self.h, d=self.d)
-
 """
 Represent a Bin needing
 packing. Where attributes are
@@ -56,14 +52,6 @@ packing. Where attributes are
 """
 class Bin(Entity):
 	fields = frozenset(('w', 'h', 'd', 'max_wg', 'id'))
-
-	def to_dict(self):
-		items = [] 
-		for i in self.items:
-			items.append(i.to_dict())
-
-		return dict(bin=dict(w=self.w, h=self.h, d=self.d),
-                            items=items)
 
 	"""
 	how long did it take to satisfy space
@@ -309,11 +297,8 @@ class Collection(object):
 				return None
 			else:
 				self.it += 1
-	
-                if self.it in self.ids.keys():
-			return self.items[self.ids[self.it]]
-		else:
-			return None
+			
+		return self.items[self.ids[self.it]]
 
 	def nextlargest(self, safe=False):
 		largest =  None	
@@ -327,9 +312,7 @@ class Collection(object):
 			if score > curscore:
 				curscore = score
 				largest = i
-
-		if largest:
-			self.used.append(largest.id)
+				self.used.append(i.id)
 
 		return largest
 
@@ -586,7 +569,7 @@ class Algo(object):
     @returns one bin packed with items
 	"""
 	def single_bin_packing(self, itemcollection,bincollection):
-		assert(len(bincollection.items) == 1)
+		assert(bincollection.items == 1)
 
 		curbin = bincollection.first()
 		first = True
@@ -761,7 +744,7 @@ class Algo(object):
 
 				#item2 = itemcollection.nextsmallest()
 		
-			self.binner.add_bin(curbin)	
+			self.binner.add_bin(bin)	
 			curbin.e_time = time.time()
 
 		return self.binner	
@@ -795,8 +778,8 @@ class Binner(object):
 
 	@param bin
 	"""
-	def add_bin(self, bin_):
-		self.packed_bins.append(bin_)
+	def add_bin(self, bin):
+		self.packed_bins.append(bin)
 
 	"""
 	add an item we couldnt
@@ -806,17 +789,6 @@ class Binner(object):
 	"""
 	def add_lost(self, item):
 		self.lost_items.append(item)
-
-	"""
-	get all the packed bins
-	in json ready form
-	"""
-	def get_packed_bins(self):
-		bins = []
-		for i in self.packed_bins:
-			bins.append(i.to_dict())
-
-		return bins
 		
 	"""
 	sets the smallest bin having
@@ -840,7 +812,7 @@ class Binner(object):
 	"""
 	def show(self):
 		j = json.dumps(dict(lost=self.lost_items,
-				    packed=self.get_packed_bins()))
+				    packed=self.packed_bins))
 
 		return j
 
@@ -898,11 +870,10 @@ class RuntimeAPI(object):
 			
 """ for loaded json enumerate it to fit auto increment style ids """
 def enumerate_json(json):
-        o = dict() 
+        o = []
         c = 0
 	for i in json:
-	    i['id'] = uuid.uuid4().__str__()
-            o[c] = i
+            o.append(i)
             c+=1 
 
         return o
@@ -914,7 +885,7 @@ of program.
 """
 class RuntimeCLI(object):
 	def __init__(self, *args):
-		a = args[0]
+		a = args
 
 		for _i in range(0, len(a)):
 			i = a[_i]
@@ -931,12 +902,10 @@ class RuntimeCLI(object):
 				self.algorithm = j
 			if i in ['-h', '--help']:
 				self._help()
-
-		self.run()
 				
 	def _help(self):
 		print """
-usage: binner "{web|cli}" required_input required_input2
+usage: binner {web|cli} required_input required_input2
 options:
 
 SERVER SPECIFIC
@@ -949,14 +918,14 @@ SERVER SPECIFIC
 		bins = BinCollection(enumerate_json(json.loads(self.bins)))
 		items = ItemCollection(enumerate_json(json.loads(self.items)))
 
-		if self.algorithm == 'single':
+		if self.algorithm == 'multi':
 			binner = Algo().single_bin_packing(items, bins)
-		elif self.algorithm == 'multi':
+		elif self.algorithm == 'single':
 			binner = Algo().multi_bin_packing(items, bins)
 		else:
-			binner = Algo().find_smallest_bin(items, bins)
+			binner = Algo().find_smallest_bin(items)
 
-		print binner.show()
+		binner.show()
 
 
 class Runtime(object):
@@ -967,7 +936,7 @@ class Runtime(object):
 		if first == 'web':
 			cherrypy.quickstart(RuntimeAPI(sys.argv))
 		else:
-			RuntimeCLI(a[0][1:])
+			RuntimeCLI(a[0][2:])
 
 if __name__ == '__main__':
 	Runtime(sys.argv)

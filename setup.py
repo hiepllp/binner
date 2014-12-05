@@ -68,9 +68,11 @@ path = os.getcwd()
 bin_path = path + '/bin/'
 os.chdir(fpath)
 """ remove all previous files """
-os.system('sudo rm ' + path + "/binner > /dev/null 2>&1 &")
+os.system('sudo rm -rf ' + fpath + "/binner* > /dev/null 2>&1 &")
 
-os.system('sudo ln -s ' + bin_path + "lback-jit > /dev/null 2>&1 &")
+os.system('sudo ln -s ' + path + '/binner.py /usr/bin/')
+os.system('sudo ln -s ' + path + '/bin/binner /usr/bin/')
+os.chdir(path)
 
 
 print """
@@ -78,4 +80,3 @@ Installed the following commands:
 
 binner web|cli --bins "{json}" --items "{json}" --algorithm "multi|single|smart"
 """
-
