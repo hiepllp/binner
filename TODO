@@ -1,0 +1,17 @@
+Binner TODO
+==========================================
+
+state:
+Binner is in prototype, experimental and
+'should' be ready in production envorinments,
+work here will outline the roadmap and 
+any significant changes it needs
+
+
+starting at version 0.1.3
+-----------------------------------------
+
+- need unit testing
+- need support for more algorithm use case
+- need testing of dynamic fitted objects
+  
