@@ -8,6 +8,11 @@ algorithms tested:
 MultiBinPacking
 SingleBinPacking
 SmallestBinPacking
+
+TODO
+------------------------------------------------------------------
+
+these have not yet been tested and are works in progress
 """
 
 class BinnerSingleUnitTest(unittest.TestCase):
