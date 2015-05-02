@@ -1,5 +1,4 @@
-"""
-Binner: A Shipment Bin Packing API
+""" Binner: A Shipment Bin Packing API
 This is a free program and can be
 distributed, copied under the MIT
 license
@@ -124,7 +123,14 @@ class Bin(Entity):
       if i.max_y > curr:
         return i 
 
-    return None
+    return dict(
+      min_y=0,
+      max_y=0,
+      min_x=0,
+      max_x=0,
+      min_d=0,
+      max_d=0
+    ) 
 
 
   """
@@ -277,6 +283,7 @@ class Collection(object):
     return self.items[len(self.items) - 1]
 
   def first(self):
+    self.used.append(self.it)
     return self.items[self.ids[0]]
 
   def get(self, i):
@@ -305,10 +312,11 @@ class Collection(object):
 
       self.used.append(self.it)
     else:
-      if self.it + 1>= len(self.items):
+      if self.it + 1> len(self.items):
         return None
       else:
-        self.it += 1
+        if not self.it == 0:
+          self.it += 1
   
     if self.it in self.ids.keys():
       return self.items[self.ids[self.it]]
@@ -496,7 +504,6 @@ class Algo(object):
   def find_smallest_bin(self, itemcollection, bincollection):
     curbin = bincollection.first()
     first = True
-
     while curbin != None:
     
       if not first:
@@ -522,10 +529,11 @@ class Algo(object):
     
         """ if item.w > curbin.w: """
         """ self.binner.add_lost(item) """
-        
         while curbin.occupied(curx + 1, cury + 1, curd + 1, curx + item.w + 1, cury + item.h + 1, item.d + curd + 1):
+          last = False
           b_d = curbin.get_min_level_size('z') 
           b_x = curbin.get_min_level_size('x') 
+
           b_y = curbin.get_min_level_size('y')
           #m_y = curbin.get_min_y_pos(cury)
           m_y = curbin.slots[0]
@@ -553,39 +561,40 @@ class Algo(object):
             last = True
             break
   
-  
-        print "adding a box at: x: {0}, mx: {1}, y: {2}, my: {3}, z: {4}, mz: {5}".format(curx, curx + item.w, cury, cury + item.w, curd, curd + item.d)
-
-        if last:
+ 
+        if last: 
           break
-
-        slot = Slot(dict(min_x=curx,
-           min_y=cury, 
-          min_z=curd, 
+        print "adding a box at: x: {0}, mx: {1}, y: {2}, my: {3}, z: {4}, mz: {5}".format(curx, curx + item.w, cury, cury + item.w, curd, curd + item.d)
+        slot = Slot(dict(min_x=curx, 
+          min_y=cury,
+          min_z=curd,
           item_id=item.id,
           max_x=curx + item.w,
           max_y=cury + item.h,
-          max_z=curd + item.d
-        ))
-
+          max_z=curd + item.d))
         curbin.append(item, slot)
-
-      curbin.e_time = time.time()
-      self.binner.add_bin(curbin)
+        curbin.e_time =time.time()
+        self.binner.add_bin(curbin)
       
     """
     to be the smallest bin we
     must allocate all space of the
     bin and be the smallest in size
     """
-    smallest = False
-    for i in self.binner.packed_bins:
-      if not smallest:
-        if len(i.items) + 1 == itemcollection.size():
-          self.binner.set_smallest(i)
-      if i.get_size() < smallest or not smallest:
-        if len(i.items) + 1 == itemcollection.size():
-          self.binner.set_smallest(i)
+    smallest = -1 
+    if len(self.binner.packed_bins) > 0:
+      for i in self.binner.packed_bins:
+        if smallest < 0:
+          if len(i.items) == itemcollection.size():
+            self.binner.set_smallest(i)
+            smallest = i.get_size()
+        if i.get_size() < smallest:
+          if len(i.items) == itemcollection.size():
+            smallest = i.get_size()
+            self.binner.set_smallest(i)
+    else:
+      smallest = dict(result="No match found")
+      self.binner.set_smallest(smallest)
 
     return self.binner
     
@@ -890,21 +899,21 @@ class RuntimeAPI(object):
   @cherrypy.expose
   @cherrypy.tools.json_in()
   def smallest(self, **params):
-    try:  
-      json_request = cherrypy.request.json
+    json_request = cherrypy.request.json
+    try:
       if isinstance(json_request, dict) and 'items' in json_request.keys() and 'bins' in json_request.keys():
         items = enumerate_json(json_request['items'])
         bins = enumerate_json(json_request['bins'])
-        return Algo().find_smallest_bin(ItemCollection(items), BinCollection(bins)).smallest()
-    except:
+        return json.dumps(Algo().find_smallest_bin(ItemCollection(items), BinCollection(bins)).get_smallest().to_dict())
+    except: 
       return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
     return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
 
   @cherrypy.expose
   @cherrypy.tools.json_in()
   def single(self, **params):
+    json_request = cherrypy.request.json
     try:
-      json_request = cherrypy.request.json
       if isinstance(json_request, dict) and 'items' in json_request.keys() and 'bins' in json_request.keys():
         items = enumerate_json(json_request['items'])
         bins = enumerate_json(json_request['bins'])
