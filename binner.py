@@ -119,9 +119,10 @@ class Bin(Entity):
   @returns full cooords of y
   """
   def get_min_y_pos(self, curr):
-    for i in self.slots:
-      if i.max_y > curr:
-        return i 
+    if len(self.slots)>0:
+      for i in self.slots:
+        if i.max_y > curr:
+          return i 
 
     return dict(
       min_y=0,
@@ -301,6 +302,7 @@ class Collection(object):
     pass
 
   def reset(self):
+    self.used = []
     self.it = 0
   
   def next(self, safe=False):
@@ -315,8 +317,7 @@ class Collection(object):
       if self.it + 1> len(self.items):
         return None
       else:
-        if not self.it == 0:
-          self.it += 1
+        self.it += 1
   
     if self.it in self.ids.keys():
       return self.items[self.ids[self.it]]
@@ -518,8 +519,7 @@ class Algo(object):
       curbin.s_time = time.time()
       while True: 
         last = False
-        item = itemcollection.next(True) ## safe on
-
+        item = itemcollection.next()
         if item is None:
           break
 
@@ -535,8 +535,7 @@ class Algo(object):
           b_x = curbin.get_min_level_size('x') 
 
           b_y = curbin.get_min_level_size('y')
-          #m_y = curbin.get_min_y_pos(cury)
-          m_y = curbin.slots[0]
+          m_y = curbin.get_min_y_pos(cury)
 
           if curx + item.w > curbin.w:
             """ try z now """
@@ -574,7 +573,7 @@ class Algo(object):
           max_z=curd + item.d))
         curbin.append(item, slot)
         curbin.e_time =time.time()
-        self.binner.add_bin(curbin)
+      self.binner.add_bin(curbin)
       
     """
     to be the smallest bin we
@@ -630,7 +629,7 @@ class Algo(object):
       curbin.s_time = time.time()
       while True: 
         last = False
-        item = itemcollection.next(True) ## safe on
+        item = itemcollection.next() ## safe on
 
         if item is None:
           break
@@ -646,8 +645,8 @@ class Algo(object):
           b_d = curbin.get_min_level_size('z') 
           b_x = curbin.get_min_level_size('x') 
           b_y = curbin.get_min_level_size('y')
-          #m_y = curbin.get_min_y_pos(cury)
-          m_y = curbin.slots[0]
+          m_y = curbin.get_min_y_pos(cury)
+          #m_y = curbin.slots[0]
 
           if curx + item.w > curbin.w:
             """ try z now """
@@ -742,8 +741,8 @@ class Algo(object):
           b_d = curbin.get_min_level_size('z') 
           b_x = curbin.get_min_level_size('x') 
           b_y = curbin.get_min_level_size('y')
-          #m_y = curbin.get_min_y_pos(cury)
-          m_y = curbin.slots[0]
+          m_y = curbin.get_min_y_pos(cury)
+          #m_y = curbin.slots[0]
 
           if curx + item.w > curbin.w:
             """ try z now """
@@ -864,8 +863,11 @@ class Binner(object):
   algorithm
   """
   def show(self):
-    j = json.dumps(dict(lost=self.lost_items,
-            packed=self.get_packed_bins()))
+    if self.smallest:
+      j =json.dumps(dict(smallest=self.get_smallest().to_dict()))
+    else:
+      j = json.dumps(dict(lost=self.lost_items,
+              packed=self.get_packed_bins()))
 
     return j
 
@@ -1019,7 +1021,7 @@ SERVER SPECIFIC
       binner = Algo().multi_bin_packing(items, bins)
     else:
       binner = Algo().find_smallest_bin(items, bins)
-
+    
     print binner.show()
 
 
