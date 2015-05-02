@@ -345,23 +345,39 @@ class Collection(object):
       score = i.w + i.h + i.d
 
       
-      if not 'curscore' is False:
+      if not curscore is False:
         cursore = score
         smallest = i
         self.used.append(k)
       if score < curscore:
-        cursore = score
+        curscore = score
         smallest = i
         self.used.append(k)
 
 
     return smallest
 
+  def find_smallest_or_largest(type='smallest'):
+    curscore = False
+    for k, i in self.items.iteritems():
+      score = i.w+i.h+i.d
+      if curscore is False:
+        smallest_or_largest = i
+      else:
+        if type == 'smallest' and score < curscore:
+          smallest_or_largest = i
+          curscore = score
+        if type == 'largest' and score > curscore:
+          smallest_or_largest = i
+          curscore = score
+    return smallest_or_largest
+          
+
   def smallest(self):
-    pass
+    return self.find_smallest_or_largest('smallest')
 
   def largest(self):
-    pass
+    return self.find_smallest_or_largest('largest')
     
 
 """
@@ -398,12 +414,12 @@ class Item(Entity):
         vice versa
   """
   def rotate(self):
-    w,h = self.w,self.h
-    self.h = w
-    self.w = h
+    w,h = int(self.w),int(self.h)
+    self.h = int(w)
+    self.w = int(h)
 
     if self.d == w:
-      self.d = h
+      self.d = int(h)
     else:
       self.d = w
                         
@@ -856,45 +872,83 @@ to run via HTTP
 """
 class RuntimeAPI(object):
   def __init__(self,a):
-    pass
+    self.args = a
+    self.ip = "127.0.0.1"
+    self.port = 1338
+    """ look for ip and port parameters """
+    for i in range(0,len(self.args)):
+      first = self.args[i]          
+      try:
+        second = self.args[i + 1]
+      except:
+        second = self.args[i]
+      if first == "--ip" or first =="ip":
+        self.ip = second
+      if first == "--port" or first == "port":
+        self.port = int(second)
     
   @cherrypy.expose
+  @cherrypy.tools.json_in()
   def smallest(self, **params):
     try:  
-      items = json.loads(enumerate_json(cherrypy.request.params['items']))
-      bins = json.loads(enumerate_json(cherrypy.request.params['bins']))
+      json_request = cherrypy.request.json
+      if isinstance(json_request, dict) and 'items' in json_request.keys() and 'bins' in json_request.keys():
+        items = enumerate_json(json_request['items'])
+        bins = enumerate_json(json_request['bins'])
+        return Algo().find_smallest_bin(ItemCollection(items), BinCollection(bins)).smallest()
+    except:
+      return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
+    return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
+
+  @cherrypy.expose
+  @cherrypy.tools.json_in()
+  def single(self, **params):
+    try:
+      json_request = cherrypy.request.json
+      if isinstance(json_request, dict) and 'items' in json_request.keys() and 'bins' in json_request.keys():
+        items = enumerate_json(json_request['items'])
+        bins = enumerate_json(json_request['bins'])
+        
+        return Algo().single_bin_packing(ItemCollection(items), BinCollection(bins)).show()
+    except:
+        return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
+
+    return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
       
-      return Algo().find_smallest_bin(ItemCollection(items), BinCollection(bins)).smallest()    
+  @cherrypy.expose
+  @cherrypy.tools.json_in()
+  def multi(self, **params):
+    try:
+      json_request = cherrypy.request.json
+      if 'items' in json_request.keys() and 'bins' in json_request.keys():
+        items = enumerate_json(json_request['items'])
+        bins  = enumerate_json(json_request['bins'])
+        
+        return Algo().multi_bin_packing(ItemCollection(items), BinCollection(bins)).show()
     except:
       return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
 
-  @cherrypy.expose
-  def single(self, **params):
-    try:
-      items = json.loads(enumerate_json(cherrypy.request.params['items']))
-      bins = json.loads(enumerate_json(cherrypy.request.params['bins']))
-      
-      return Algo().single_bin_packing(ItemCollection(items), BinCollection(bins)).smallest()
-    except:
-      return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
-      
-  @cherrypy.expose
-  def multi(self, **params):
-    try:
-      items = json.loads(enumerate_json(cherrypy.request.params['items']))
-      bins = json.loads(enumerate_json(cherrypy.request.params['bins']))
-      
-      return Algo().multi_bin_packing(ItemCollection(items), BinCollection(bins)).smallest()
-    except:
-      return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
+    return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
     
   @cherrypy.expose
   def index(self, **params):
-      return """<h1>Welcome to the Binner API</1>
+      output = """<h1>Welcome to the Binner API</1>
       <br>
       to use you go to any of these links:
       <br>
+      POST
+
+      <p>
+      <a href="/single/">/single/</a>
+      <a href="/multi/">/multi/</a>
+      <a href="/smallest/">/smallest/</a>
+
+      your request should look like
+      curl -H 'Content-Type: application/json' -XPOST -d '{"bins": [{"title": "an example", "w": 100, "h": 100, "d": 100 }], "items": [{"title": "item_1", "w": 100, "h": 100, "d": 100 }]}' """ + str(self.ip) + """:"""  + str(self.port) + """/single/ remember to look up the documentation for more
+
+      </p>
       """
+      return output 
       
 """ for loaded json enumerate it to fit auto increment style ids """
 def enumerate_json(json):
@@ -967,7 +1021,15 @@ class Runtime(object):
       first = a[0][1]
 
       if first == 'web':
-        cherrypy.quickstart(RuntimeAPI(sys.argv))
+        """ add config """
+        api = RuntimeAPI(sys.argv)
+        global_config = {
+          "server.socket_host":api.ip,
+          "server.socket_port":api.port
+        } 
+        my_config = {"/": {}}
+        cherrypy.config.update(global_config)
+        cherrypy.quickstart(api, "/", config=my_config)
       else:
         RuntimeCLI(a[0][1:])
     else:
