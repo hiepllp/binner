@@ -8,26 +8,26 @@ except ImportError:
 	from distutils.core import setup
 
 from distutils.command.build_py import build_py
+from distutils.command.install import install
 
-class buildsetup(build_py):
-    def find_package_modules(self, package, package_dir):
-        """
-        Lookup modules to be built before install. Because we
-        only use a single source distribution for Python 2 and 3,
-        we want to avoid specific modules to be built and deployed
-        on Python 2.x. By overriding this method, we filter out
-        those modules before distutils process them.
-        This is in reference to issue #123.
-        """
-        modules = build_py.find_package_modules(self, package, package_dir)
-        amended_modules = []
-        for (package_, module, module_file) in modules:
-            if sys.version_info < (3,):
-                if module in ['async_websocket', 'tulipserver']:
-                    continue
-            amended_modules.append((package_, module, module_file))
+class installsetup(install):
+    def run(self):
+        os.system("pip install -r requirements.txt")
+	fpath = '/usr/bin/'
+	ffpath = '/usr/'
+        binnerpath=os.getcwd() + '/binner/'
+	path = os.getcwd()
+	bin_path = path + '/bin/'
+	os.chdir(fpath)
+	remove=['/usr/bin/binner.py', '/usr/bin/binner']
+	for i in remove:
+	   if os.path.islink( i ):
+	        os.remove( i )
+	os.system('sudo ln -s ' + binnerpath + '/binner.py /usr/bin/binner.py')
+	os.system('sudo ln -s ' + path + '/bin/binner /usr/bin/binner')
+	os.chdir(path)
+	install.run( self )
 
-        return amended_modules
 
 def finalizesetup():
 	pass
@@ -60,23 +60,4 @@ setup(name="Binner",
           'Topic :: Internet :: WWW/HTTP :: WSGI :: Server',
           'Topic :: Software Development :: Libraries :: Python Modules'
       ],
-      cmdclass=dict(build_py=buildsetup))
-
-fpath = '/usr/bin/'
-ffpath = '/usr/'
-path = os.getcwd()
-bin_path = path + '/bin/'
-os.chdir(fpath)
-""" remove all previous files """
-os.system('sudo rm -rf ' + fpath + "/binner* > /dev/null 2>&1 &")
-
-os.system('sudo ln -s ' + path + '/binner.py /usr/bin/')
-os.system('sudo ln -s ' + path + '/bin/binner /usr/bin/')
-os.chdir(path)
-
-
-print """
-Installed the following commands:
-
-binner web|cli --bins "{json}" --items "{json}" --algorithm "multi|single|smart"
-"""
+      cmdclass=dict(install=installsetup))
