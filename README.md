@@ -1,0 +1,97 @@
+Binner - Quick And Dirty bin allocation
+==========================================================
+
+binner is a quick way to find the best bin sizes for
+your items. You give it a set of bins and items, select
+an algorithm and it will return you the best fit.
+
+It is for 3 Dimensional space, supports an API
+and is a working draft. All work has been experimental 
+and has yet to be tested for real case scenarios
+
+Why its something you should use
+-------------------------------------------------------
+
+A lot of bin packing apis are paid. This one is free,
+It is lightweight, speedy and able to perform basic
+bin packing needs.
+
+Algorithms:
+
+Finding Smallest Bin -- Given a set of bins and items
+find the smallest bin with enough space for "as" much 
+as items as possible
+
+Multiple Bin Packing -- Get the items fit into the provided
+set of bins using as much as space as possible 
+
+Smallest Bin Packing -- Compare the items for each bin
+and show statistics, according to which bin is best, worst
+
+
+Example Usage:
+
+running through CLI
+
+```
+binner "cli" --bins '[{ "title": "test", "w": 100000, "h": 10000, "d": 100, "weight": 20, "id": 1, "max_weight": 1000 }, { "title": "test", "w": 100000, "h": 10000, "d": 100, "weight": 20, "id": 1, "max_weight": 1000 }]' --items '[{ "title": "test", "w": 50, "h": 50, "d": 50, "q": 2, "weight": 200, "id":202 }, { "title": "test", "w": 50, "h": 50, "d": 100, "weight": 20, "id": 2, "max_weight": 1000 }]' --algorithm "multi"
+	
+Box Dimensions are (width: 1000, height: 50, depth: 100)
+Packing Bin #1
+adding a box at: x: 0, mx: 50, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 50, mx: 100, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 100, mx: 150, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 150, mx: 200, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 200, mx: 250, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 250, mx: 300, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 300, mx: 350, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 350, mx: 400, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 400, mx: 450, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 450, mx: 500, y: 0, my: 50, z: 0, mz: 50
+adding a box at: x: 500, mx: 550, y: 0, my: 50, z: 0, mz: 50
+Packing Bin #2
+Packing Bin #3
+````
+
+	
+only one box filled. given the size
+
+```
+binner --bins "[{}, {}]" --items "[{}, {}]"  --algorithm "single"
+```
+
+```
+binner --bins "[{}, {}]" --items "[{}, {}]"  --algorithm "smallest"
+```
+
+
+running through API
+
+```
+binner "web"
+```
+
+```
+POST /v1/binner/multi/
+```
+```
+POST /v1/binner/single/
+```
+```
+POST /v1/binner/smallest/
+```
+
+Data output will appear the same as cli, just JSON packed.
+
+Unit testing
+-------------------------------------------------------------------
+
+unit tests are available in ./unit.py. These demonstrate
+some use case scenarios. 
+
+
+Want to help
+-------------------------------------------------------------------
+
+If you like 3d geometery and have ideas for this project and feel
+these services should not be paid for, contact me any time at [matrix.nad@gmail.com]
