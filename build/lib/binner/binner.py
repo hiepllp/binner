@@ -15,6 +15,7 @@ import uuid
 import sys
 import os
 import pprint
+import argparse
 
 try:
   import cherrypy
@@ -980,6 +981,8 @@ of program.
 class RuntimeCLI(object):
   def __init__(self, *args):
     a = args[0]
+    self.initv2( a )
+  def initv1(self, a):
 
     for _i in range(0, len(a)):
       i = a[_i]
@@ -997,8 +1000,15 @@ class RuntimeCLI(object):
       if i in ['-h', '--help']:
         self._help()
         return None
-
-    self.run()
+    self.run(self)
+  def initv2( self, a ):
+	 parser = argparse.ArgumentParser()
+	 parser.add_argument("--mode", help="mode, cli or web", default="cli")
+	 parser.add_argument("--algorithm", help="algorithm", default="single")
+	 parser.add_argument("--bins", help="Bins to specify")
+	 parser.add_argument("--items", help="Items to specify")
+	 result = parser.parse_args()
+	 self.run( result )
         
   def _help(self):
     print """
@@ -1011,13 +1021,13 @@ SERVER SPECIFIC
 --algorithm What algorithm to use
 """
   
-  def run(self):
-    bins = BinCollection(enumerate_json(json.loads(self.bins)))
-    items = ItemCollection(enumerate_json(json.loads(self.items)))
+  def run(self, args):
+    bins = BinCollection(enumerate_json(json.loads(args.bins)))
+    items = ItemCollection(enumerate_json(json.loads(args.items)))
 
-    if self.algorithm == 'single':
+    if args.algorithm == 'single':
       binner = Algo().single_bin_packing(items, bins)
-    elif self.algorithm == 'multi':
+    elif args.algorithm == 'multi':
       binner = Algo().multi_bin_packing(items, bins)
     else:
       binner = Algo().find_smallest_bin(items, bins)
