@@ -152,6 +152,9 @@ class Bin(Entity):
     assert(slot.item_id == item.id)
     self.items.append(item)
     self.slots.append(slot)
+    self.w-=item.w
+    self.h-=item.h
+    self.d-=item.d
 
   """ where would we need to be to satisfy y, """
   """ in order for our physics to remain real we need """
@@ -983,7 +986,6 @@ class RuntimeCLI(object):
     a = args[0]
     self.initv2( a )
   def initv1(self, a):
-
     for _i in range(0, len(a)):
       i = a[_i]
       try:
@@ -1002,13 +1004,17 @@ class RuntimeCLI(object):
         return None
     self.run(self)
   def initv2( self, a ):
+		
 	 parser = argparse.ArgumentParser()
 	 parser.add_argument("--mode", help="mode, cli or web", default="cli")
-	 parser.add_argument("--algorithm", help="algorithm", default="single")
+	 parser.add_argument("--algorithm", help="algorithm to use 'small' or 'multi' or 'single'", default="single")
 	 parser.add_argument("--bins", help="Bins to specify")
 	 parser.add_argument("--items", help="Items to specify")
 	 result = parser.parse_args()
-	 self.run( result )
+	 if len( a ) == 1:
+		parser.print_help()
+	 else:
+	 	self.run( result )
         
   def _help(self):
     print """
@@ -1022,21 +1028,38 @@ SERVER SPECIFIC
 """
   
   def run(self, args):
-    bins = BinCollection(enumerate_json(json.loads(args.bins)))
-    items = ItemCollection(enumerate_json(json.loads(args.items)))
+    if args.mode == "cli":
+      bins = BinCollection(enumerate_json(json.loads(args.bins)))
+      items = ItemCollection(enumerate_json(json.loads(args.items)))
 
-    if args.algorithm == 'single':
-      binner = Algo().single_bin_packing(items, bins)
-    elif args.algorithm == 'multi':
-      binner = Algo().multi_bin_packing(items, bins)
+      if args.algorithm == 'single':
+        binner = Algo().single_bin_packing(items, bins)
+      elif args.algorithm == 'multi':
+        binner = Algo().multi_bin_packing(items, bins)
+      else:
+        binner = Algo().find_smallest_bin(items, bins)
     else:
-      binner = Algo().find_smallest_bin(items, bins)
+	 web = RuntimeWeb()
+    
     
     print binner.show()
 
 
+class RuntimeWeb(object):
+    def __init__(self):
+       api =  RuntimeAPI( sys.argv )
+       global_config = {
+          "server.socket_host":api.ip,
+          "server.socket_port":api.port
+        } 
+       my_config = {"/": {}}
+       cherrypy.config.update(global_config)
+       cherrypy.quickstart(api, "/", config=my_config)
+
 class Runtime(object):
   def __init__(self, *args):
+    self.initv2(*args)
+  def initv1(self, *args):
     a = args
     if len(a[0]) > 1:
       first = a[0][1]
@@ -1056,6 +1079,8 @@ class Runtime(object):
     else:
       """ no input exit """
       print "You must specify either web or cli as the first argument!"
+  def initv2(self,*args):
+	 RuntimeCLI(*args)
 
 
 

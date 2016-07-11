@@ -34,7 +34,7 @@ Example Usage:
 running through CLI
 
 ```
-binner "cli" --bins '[{ "title": "test", "w": 100000, "h": 10000, "d": 100, "weight": 20, "id": 1, "max_weight": 1000 }, { "title": "test", "w": 100000, "h": 10000, "d": 100, "weight": 20, "id": 1, "max_weight": 1000 }]' --items '[{ "title": "test", "w": 50, "h": 50, "d": 50, "q": 2, "weight": 200, "id":202 }, { "title": "test", "w": 50, "h": 50, "d": 100, "weight": 20, "id": 2, "max_weight": 1000 }]' --algorithm "multi"
+binner --bins '[{ "title": "test", "w": 100000, "h": 10000, "d": 100, "weight": 20, "id": 1, "max_weight": 1000 }, { "title": "test", "w": 100000, "h": 10000, "d": 100, "weight": 20, "id": 1, "max_weight": 1000 }]' --items '[{ "title": "test", "w": 50, "h": 50, "d": 50, "q": 2, "weight": 200, "id":202 }, { "title": "test", "w": 50, "h": 50, "d": 100, "weight": 20, "id": 2, "max_weight": 1000 }]' --algorithm "multi"
 	
 Box Dimensions are (width: 1000, height: 50, depth: 100)
 Packing Bin #1
@@ -68,7 +68,7 @@ binner --bins "[{}, {}]" --items "[{}, {}]"  --algorithm "smallest"
 running through API
 
 ```
-binner "web"
+binner --mode "web"
 ```
 
 ```
