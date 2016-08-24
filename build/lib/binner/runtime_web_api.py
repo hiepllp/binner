@@ -9,7 +9,9 @@ class RuntimeWebAPI(object):
       if isinstance(json_request, dict) and 'items' in json_request.keys() and 'bins' in json_request.keys():
         items = enumerate_json(json_request['items'])
         bins = enumerate_json(json_request['bins'])
-        return json.dumps(Algo().find_smallest_bin(ItemCollection(items), BinCollection(bins)).get_smallest().to_dict())
+	binner_algo = AlgoSmallest(items,bins)
+	binner_algo.run()
+        return json.dumps(binner_algo.binner.get_smallest())
     except: 
       return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
     return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
@@ -22,8 +24,9 @@ class RuntimeWebAPI(object):
       if isinstance(json_request, dict) and 'items' in json_request.keys() and 'bins' in json_request.keys():
         items = enumerate_json(json_request['items'])
         bins = enumerate_json(json_request['bins'])
-        
-        return Algo().single_bin_packing(ItemCollection(items), BinCollection(bins)).show()
+	binner_algo = AlgoSingle(items,bins)
+       	binner_algo.run() 
+        return  json.dumps(binner_algo.binner.show())
     except:
         return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
 
@@ -37,8 +40,9 @@ class RuntimeWebAPI(object):
       if 'items' in json_request.keys() and 'bins' in json_request.keys():
         items = enumerate_json(json_request['items'])
         bins  = enumerate_json(json_request['bins'])
-        
-        return Algo().multi_bin_packing(ItemCollection(items), BinCollection(bins)).show()
+	binner_algo = AlgoMulti(items,bins)
+        binner_algo.run() 
+        return json.dumps(binner_algo.binner.show())
     except:
       return r"""{"status": "error", 'message="Please add properties 'bins' and 'items' to your JSON objects."}"""
 

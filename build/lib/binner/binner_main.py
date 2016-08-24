@@ -72,11 +72,11 @@ class Binner(object):
   """
   def show(self):
     if self.smallest:
-      j =json.dumps(dict(smallest=self.get_smallest().to_dict()))
+      result =dict(smallest=self.get_smallest().to_dict())
     else:
-      j = json.dumps(dict(lost=self.lost_items,
-              packed=self.get_packed_bins()))
+      result = dict(lost=self.lost_items,
+              packed=self.get_packed_bins())
 
-    return j
+    return result
 
 
