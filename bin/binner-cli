@@ -1,0 +1,5 @@
+#!/usr/bin/python
+from binner.runtime_cli import RuntimeCLI
+import sys
+if __name__=='__main__':
+   RuntimeCLI( sys.argv )

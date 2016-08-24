@@ -1,0 +1,5 @@
+#!/usr/bin/python
+from binner.runtime_web import RuntimeWeb
+import sys
+if __name__=='__main__':
+   RuntimeWeb( sys.argv )

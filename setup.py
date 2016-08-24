@@ -19,12 +19,12 @@ class installsetup(install):
 	path = os.getcwd()
 	bin_path = path + '/bin/'
 	os.chdir(fpath)
-	remove=['/usr/bin/binner.py', '/usr/bin/binner']
+	remove=['/usr/bin/binner-cli', '/usr/bin/binner-web']
 	for i in remove:
 	   if os.path.islink( i ):
 	        os.remove( i )
-	os.system('sudo ln -s ' + binnerpath + '/binner.py /usr/bin/binner.py')
-	os.system('sudo ln -s ' + path + '/bin/binner /usr/bin/binner')
+        os.system('ln -s ' + path + '/bin/binner-cli /usr/bin/binner-cli')
+        os.system('ln -s ' + path + '/bin/binner-web  /usr/bin/binner-web')
 	os.chdir(path)
 	install.run( self )
 
