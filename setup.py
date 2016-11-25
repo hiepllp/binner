@@ -12,22 +12,8 @@ from distutils.command.install import install
 
 class installsetup(install):
     def run(self):
-        os.system("pip install -r requirements.txt")
-	fpath = '/usr/bin/'
-	ffpath = '/usr/'
-        binnerpath=os.getcwd() + '/binner/'
-	path = os.getcwd()
-	bin_path = path + '/bin/'
-	os.chdir(fpath)
-	remove=['/usr/bin/binner-cli', '/usr/bin/binner-web']
-	for i in remove:
-	   if os.path.islink( i ):
-	        os.remove( i )
-        os.system('ln -s ' + path + '/bin/binner-cli /usr/bin/binner-cli')
-        os.system('ln -s ' + path + '/bin/binner-web  /usr/bin/binner-web')
-	os.chdir(path)
-	install.run( self )
-
+	pass
+        
 
 def finalizesetup():
 	pass
