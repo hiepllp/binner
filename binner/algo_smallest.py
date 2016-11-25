@@ -1,5 +1,6 @@
-from binner.algo import Algo
-from binner.entity_slot import Slot
+from .algo import Algo
+from .entity_slot import Slot
+from . import log
 import time
 class AlgoSmallest(Algo):
   """
@@ -21,8 +22,10 @@ class AlgoSmallest(Algo):
   """
   
   def run(self):
+    log.debug("Entering Algorithm SMALLEST")
     bincollection = self.bins
     itemcollection = self.items
+    assert(bincollection.count() > 0 and itemcollection.count() > 0)
     curbin = bincollection.first()
     first = True
     while curbin != None:
@@ -33,16 +36,17 @@ class AlgoSmallest(Algo):
 
       if curbin is None:
         break
-      print "Trying to allocate items for bin: {0}".format(curbin.id)
+      log.info("Trying to allocate items for bin: {0}".format(curbin.id))
 
       itemcollection.reset()
       curbin.s_time = time.time()
-      while True: 
+      while True:
         last = False
-        item = itemcollection.next()
-        if item is None:
-          break
-
+	item = itemcollection.next()
+	if not item:
+	    break
+	if not curbin.can_fit( item ):
+	    continue
         curx = 0
         cury = 0
         curd = 0
@@ -83,15 +87,15 @@ class AlgoSmallest(Algo):
  
         if last: 
           break
-        print "adding a box at: x: {0}, mx: {1}, y: {2}, my: {3}, z: {4}, mz: {5}".format(curx, curx + item.w, cury, cury + item.w, curd, curd + item.d)
+        log.info("adding a box at: x: {0}, mx: {1}, y: {2}, my: {3}, z: {4}, mz: {5}".format(curx, curx + item.w, cury, cury + item.w, curd, curd + item.d))
         slot = Slot(dict(min_x=curx, 
           min_y=cury,
           min_z=curd,
-          item_id=item.id,
+          item=item,
           max_x=curx + item.w,
           max_y=cury + item.h,
           max_z=curd + item.d))
-        curbin.append(item, slot)
+        curbin.append(slot)
         curbin.e_time =time.time()
       self.binner.add_bin(curbin)
       
@@ -112,8 +116,7 @@ class AlgoSmallest(Algo):
             smallest = i.get_size()
             self.binner.set_smallest(i)
     else:
-      smallest = dict(result="No match found")
-      self.binner.set_smallest(smallest)
+      self.binner.set_smallest(False)
 
     return self.binner
 

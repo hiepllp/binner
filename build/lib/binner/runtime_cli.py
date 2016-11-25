@@ -1,9 +1,9 @@
-from binner.runtime import Runtime
-from binner.algo_small import AlgoSmallest
-from binner.algo_multi import AlgoMulti
-from binner.algo_single import AlgoSingle
-from binner.collection_bin import BinCollection
-from binner.collection_item import ItemCollection
+from .runtime import Runtime
+from .algo_smallest import AlgoSmallest
+from .algo_multi import AlgoMulti
+from .algo_single import AlgoSingle
+from .collection_bin import BinCollection
+from .collection_item import ItemCollection
 from helpers import enumerate_json
 import json
 import argparse
@@ -34,6 +34,7 @@ class RuntimeCLI(Runtime):
 	 parser = argparse.ArgumentParser()
 	 ##parser.add_argument("--mode", help="mode, cli or web", default="cli")
 	 parser.add_argument("--algorithm", help="algorithm to use 'small' or 'multi' or 'single'", default="single")
+	 parser.add_argument("--multi-use-smallest-bins",help="Use the smallest bins",action="store_true")
 	 parser.add_argument("--bins", help="Bins to specify")
 	 parser.add_argument("--items", help="Items to specify")
 	 parser.add_argument("--host", help="Host to run API on", default="0.0.0.0")
@@ -60,11 +61,11 @@ SERVER SPECIFIC
       items = ItemCollection(enumerate_json(json.loads(args.items)))
 
       if args.algorithm == 'single':
-        binner_algo = AlgoSingle(bins,items)
+        binner_algo = AlgoSingle(args,bins,items)
       elif args.algorithm == 'multi':
-        binner_algo = AlgoMulti(bins,items)
-      else:
-        binner_algo = AlgoSmallest(bins,items)
+        binner_algo = AlgoMulti(args,bins,items)
+      elif args.algorithm == "smallest":
+        binner_algo = AlgoSmallest(args,bins,items)
       binner_algo.run()
       print binner_algo.binner.show()
 

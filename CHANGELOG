@@ -22,3 +22,8 @@ web version fixes
 ------------------------------
 OOP based structure
 refactoring
+
+0.6.0
+-------------------------------
+Rework existing code
+Add --multi-use-smallest-bins for "multi" algorithm

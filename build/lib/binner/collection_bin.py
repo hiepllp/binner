@@ -1,5 +1,5 @@
-from binner.collection import Collection
-from binner.entity_bin import Bin
+from .collection import Collection
+from .entity_bin import Bin
 
 class BinCollection(Collection):
    def __init__(self,args):

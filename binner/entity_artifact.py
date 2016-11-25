@@ -1,4 +1,4 @@
-from binner.entity import Entity
+from .entity import Entity
 class EntityArtifact(Entity):
   def get_coords(self):
     return dict(x=self.x, y=self.y, z=self.z)

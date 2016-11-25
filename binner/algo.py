@@ -1,4 +1,5 @@
-from binner.binner_main import Binner
+from .binner_main import Binner
+from . import log
 """
 A Set of algorithms to find
 smallestbin size, multi bin packing
@@ -19,10 +20,15 @@ vertically, and horizontal for a optimal fit.
 
 """
 class Algo(object):
-  def __init__(self, bins, items):
-    self.binner = Binner()
+  def __init__(self, args, bins, items):
+    self.binner = Binner(args, bins, items )
+    self.args = args
     self.bins = bins
     self.items = items
-    
-  def run(self):
+
+  def get_next_bin(self):
+	 if self.args.multi_use_smallest_bins:
+		return self.bins.nextsmallest()
+	 return self.bins.next()
+  def run( self ):
 	 pass

@@ -6,12 +6,20 @@ class for the objects of
 bin and item type
 """
 class Collection(object):
+  #used = []
   def __init__(self, args):
+    cnt = 0
     self.items = dict()
-    self.tried = []
+    self.ids = dict()
+    self.used = []
     self.it = 0
+
     for k,v in args.iteritems():  
-        self.items[k] = self.get_entity()( v )
+        self.items[cnt] = self.get_entity()( v )
+        self.ids[cnt] = k
+
+        cnt += 1
+
   def usedsize(self):
     return len(self.used)
 
@@ -22,7 +30,8 @@ class Collection(object):
     return self.items[len(self.items) - 1]
 
   def first(self):
-    return self.items[0]
+    self.used.append(self.it)
+    return self.items[self.ids[0]]
 
   def get(self, i):
     return self.items[i]
@@ -35,53 +44,52 @@ class Collection(object):
 
     return self.items[self.it]
 
-
   def find(self, **attrs):
     pass
 
   def reset(self):
-     for k,  item in self.items.iteritems():
-	 item.tried=False
-     self.it = 0
+    self.used = []
+    self.it = 0
   
   def next(self, safe=False, mode="NORMAL"):
     if not safe:
-      if not (self.it) in self.items.keys():
-	 item = None
+      while self.it in self.used:
+        self.it += 1
+        if self.it + 1> len(self.items):
+          return None
+
+      item = self.items[self.ids[self.it]]
+      score = item.w+item.h+item.d
+      if mode=="NORMAL":
+           self.used.append(self.it)
       else:
-         item = self.items[self.it]
-         score = item.w+item.h+item.d
-         if mode=="NORMAL":
-		item.tried=True
-         else:
-	      item = None
-	      for k_a, item_a in self.items.iteritems():
-	  	 if item_a.tried or item_a.used:
-		    continue
-		 item = item_a
-		 for k_b, item_b  in self.items.iteritems():
-		    if item_b.tried or item_b.used:
-		       continue
-		    if self.mode_op( item_a, item_b, mode ):
-			 item = item_b
-	      if item:
-		 item.tried=True
-	 self.it+=1
+	   it = 0
+	
+	   while it < len( self.items ):
+		 next_item =  self.items[ it ] 
+		 if not next_item.id == item.id and self.mode_op( item, next_item, mode ):
+			item = next_item
+			self.it = it 
+		 it += 1
+	   self.used.append( self.it )
 		
     else:
       if self.it + 1> len(self.items):
         return None
       else:
         self.it += 1
-      item = self.items[ self.it ] 
-    return item
   
+    if self.it in self.ids.keys():
+      return self.items[self.ids[self.it]]
+    else:
+      return None
+
   def nextlargest_v1(self, safe=False):
     largest =  None 
     curscore= 0
 
     for k,i  in self.items.iteritems(): 
-      if i.id in self.tried:
+      if i.id in self.used:
         continue
 
       score = i.w + i.h + i.d
@@ -90,7 +98,7 @@ class Collection(object):
         largest = i
 
     if largest:
-      self.tried.append(largest.id)
+      self.used.append(largest.id)
 
     return largest
   def nextlargest_v2(self, safe=False):
@@ -104,7 +112,7 @@ class Collection(object):
     curscore = False
    
     for k, i in self.items.iteritems():
-      if k in self.tried:
+      if k in self.used:
         continue
 
       score = i.w + i.h + i.d
@@ -113,11 +121,11 @@ class Collection(object):
       if curscore is False:
         cursore = score
         smallest = i
-        self.tried.append(k)
+        self.used.append(k)
       if score < curscore:
         curscore = score
         smallest = i
-        self.tried.append(k)
+        self.used.append(k)
 
     return smallest
   def nextsmallest_v2(self, safe=False):

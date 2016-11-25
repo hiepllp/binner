@@ -25,8 +25,8 @@ as items as possible
 Multiple Bin Packing -- Get the items fit into the provided
 set of bins using as much as space as possible 
 
-Smallest Bin Packing -- Compare the items for each bin
-and show statistics, according to which bin is best, worst
+Single Bin Packing -- Try to fit as many items into one bin as
+possible
 
 
 Example Usage:

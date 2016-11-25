@@ -1,15 +1,15 @@
-from binner.entity_object import EntityObject
-from binner.entity_artifact import EntityArtifact
+from .entity_object import EntityObject
+from .entity_artifact import EntityArtifact
 class Bin(EntityObject,EntityArtifact):
-  fields = frozenset(('w', 'h', 'd', 'max_wg', 'id'))
+  fields = frozenset(('w', 'h', 'd', 'max_wg', 'id', 'used'))
 
   def to_dict(self):
-    items = [] 
-    for i in self.items:
-      items.append(i.to_dict())
+    slots = [] 
+    for i in self.slots:
+      slots.append(i.to_dict())
 
-    return dict(bin=dict(w=self.w, h=self.h, d=self.d, initial=self.initial),
-                            items=items)
+    return dict(bin=dict(id=self.id, w=self.w, h=self.h, d=self.d, initial=self.initial),
+                            slots=slots)
 
   """
   how long did it take to satisfy space
@@ -94,13 +94,11 @@ class Bin(EntityObject,EntityArtifact):
 
   @param item: item to add
   """
-  def append(self, item, slot):
-    assert(slot.item_id == item.id)
-    self.items.append(item)
+  def append(self, slot):
+    slot.item.used=True
+    if self.used!=True:
+	self.used=True
     self.slots.append(slot)
-    self.w-=item.w
-    self.h-=item.h
-    self.d-=item.d
 
   """ where would we need to be to satisfy y, """
   """ in order for our physics to remain real we need """
@@ -114,11 +112,8 @@ class Bin(EntityObject,EntityArtifact):
   @param item: item belonging to the bin
   """
   def remove(self, item):
-    for i in range(0, len(self.items)):
-      if self.items[i].id == item.id:
-        self.items.pop(self.items[i])
     for i in range(0, len(self.slots)):
-      if self.slots[i].item_id == item.id:
+      if self.slots[i].item.id == item.id:
         self.slots.pop(self.slots[i])
 
   """
@@ -174,6 +169,7 @@ class Bin(EntityObject,EntityArtifact):
   """
   def space_taken(self):
     pass
-
-
-
+  def can_fit( self, item ) :
+	 if  (item.w > self.w) or (item.h > self.h) or (item.d > self.d ):
+		return False
+	 return True

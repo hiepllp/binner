@@ -11,7 +11,7 @@ class EntityObject(Entity):
    def get_size(self):
      return dict(w=self.w, h=self.h)
    def to_dict(self):
-     return dict(w=self.w, h=self.h, d=self.d)
+     return dict(w=self.w, h=self.h, d=self.d, id=self.id)
 
 
 

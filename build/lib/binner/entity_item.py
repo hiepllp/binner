@@ -1,5 +1,5 @@
-from binner.entity_object import EntityObject
-from binner.entity_artifact import EntityArtifact
+from .entity_object import EntityObject
+from .entity_artifact import EntityArtifact
 class Item(EntityObject,EntityArtifact):
   fields = frozenset(('w', 'h', 'd', 'q', 'm ', 'vr', 'wg', 'id'))
 

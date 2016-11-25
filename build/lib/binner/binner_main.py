@@ -19,8 +19,10 @@ class Binner(object):
   packed_bins = []
   smallest = {} ## only available when algorithm find_smallest is ran
 
-  def __init__(self):
-    pass
+  def __init__(self, args, bins, items ):
+	self.args =  args
+	self.bins = bins
+	self.items = items
 
   """
   add a bin
@@ -71,11 +73,20 @@ class Binner(object):
   algorithm
   """
   def show(self):
-    if self.smallest:
-      result =dict(smallest=self.get_smallest().to_dict())
+    if self.args.algorithm == "smallest":
+      smallest = self.get_smallest()
+      if smallest:
+           result =dict(smallest=self.get_smallest().to_dict())
+      else:
+	   result = dict(smallest=False)
     else:
-      result = dict(lost=self.lost_items,
+      lost_items = []
+      for k, item in self.items.items.iteritems():
+	  if not item.used:
+	      lost_items.append( item.to_dict() )
+      result = dict(lost=lost_items,
               packed=self.get_packed_bins())
+	
 
     return result
 
