@@ -49,16 +49,15 @@ only one box filled. given the size
 
 ```
 binner-cli --items '[{"w": 1000, "h": 1000, "d": 1000, "id":"TestingMyItem"}]' --bins '[{"w": 2000, "h": 2000, "d": 2000, "id": "TestingMyBin"}]' --algorithm single
-2016-11-25 18:39:07,159 Registering Entity
-2016-11-25 18:39:07,159 {u'h': 2000, u'd': 2000, u'w': 2000, u'id': u'TestingMyBin'}
-2016-11-25 18:39:07,160 Registering Entity
-2016-11-25 18:39:07,160 {u'h': 1000, u'd': 1000, u'w': 1000, u'id': u'TestingMyItem'}
-2016-11-25 18:39:07,160 Entering algorithm SINGLE
-2016-11-25 18:39:07,160 Trying to allocate items for bin: TestingMyBin
-2016-11-25 18:39:07,160 adding a box at: x: 0, mx: 1000, y: 0, my: 1000, z: 0, mz: 1000
-2016-11-25 18:39:07,160 Trying to allocate items for bin: TestingMyBin
-2016-11-25 18:39:07,201 adding a box at: x: 1000, mx: 2000, y: 0, my: 1000, z: 0, mz: 1000
-{'packed': [{'bin': {'h': 2000, 'initial': {'h': 2000, 'd': 2000, 'w': 2000}, 'd': 2000, 'w': 2000, 'id': u'TestingMyBin'}, 'slots': [{'min_x': 0, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '4d76936d-1502-4805-9fad-e05c16344872', 'max_x': 1000, 'max_y': 1000}, {'min_x': 1000, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '41291de0-a772-48a3-98f5-c8052cfec88f', 'max_x': 2000, 'max_y': 1000}]}, {'bin': {'h': 2000, 'initial': {'h': 2000, 'd': 2000, 'w': 2000}, 'd': 2000, 'w': 2000, 'id': u'TestingMyBin'}, 'slots': [{'min_x': 0, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '4d76936d-1502-4805-9fad-e05c16344872', 'max_x': 1000, 'max_y': 1000}, {'min_x': 1000, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '41291de0-a772-48a3-98f5-c8052cfec88f', 'max_x': 2000, 'max_y': 1000}]}], 'lost': []}
+2016-11-25 18:42:10,589 Registering Entity
+2016-11-25 18:42:10,589 {u'h': 2000, u'd': 2000, u'w': 2000, u'id': u'TestingMyBin'}
+2016-11-25 18:42:10,590 Registering Entity
+2016-11-25 18:42:10,590 {u'h': 1000, u'd': 1000, u'w': 1000, u'id': u'TestingMyItem'}
+2016-11-25 18:42:10,590 Entering algorithm SINGLE
+2016-11-25 18:42:10,590 Trying to allocate items for bin: TestingMyBin
+2016-11-25 18:42:10,590 adding a box at: x: 0, mx: 1000, y: 0, my: 1000, z: 0, mz: 1000
+{'packed': [{'bin': {'h': 2000, 'initial': {'h': 2000, 'd': 2000, 'w': 2000}, 'd': 2000, 'w': 2000, 'id': u'TestingMyBin'}, 'slots': [{'min_x': 0, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '34762211-5727-4039-9dd8-1bb96985a46a', 'max_x': 1000, 'max_y': 1000}]}], 'lost': []}
+
 ```
 
 Unit testing
