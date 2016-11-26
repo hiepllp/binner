@@ -20,7 +20,7 @@ class AlgoSingle(Algo):
     itemcollection =self.items
     assert(len(bincollection.items) == 1)
 
-    curbin = bincollection.first()
+    curbin = bincollection.next()
     first = True
     
     while curbin != None:

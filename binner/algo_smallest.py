@@ -26,7 +26,7 @@ class AlgoSmallest(Algo):
     bincollection = self.bins
     itemcollection = self.items
     assert(bincollection.count() > 0 and itemcollection.count() > 0)
-    curbin = bincollection.first()
+    curbin = bincollection.next()
     first = True
     while curbin != None:
     
