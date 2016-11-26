@@ -12,7 +12,7 @@ from distutils.command.install import install
 
 class installsetup(install):
     def run(self):
-	pass
+	 install.run( self )
         
 
 def finalizesetup():

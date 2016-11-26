@@ -1,4 +1,4 @@
-
+from . import log
 
 """
 A generic collection
@@ -11,6 +11,8 @@ class Collection(object):
     self.tried = []
     self.it = 0
     for k,v in args.iteritems():  
+	log.debug("Registering Entity")
+	log.debug( v )
         self.items[k] = self.get_entity()( v )
   def usedsize(self):
     return len(self.used)
