@@ -48,16 +48,17 @@ binner-cli --bins '[{ "title": "test", "w": 100000, "h": 10000, "d": 100, "weigh
 only one box filled. given the size
 
 ```
-binner-cli --algorithm single --bins '[{"w": 1000, "h": 1000, "d": 1000, "id": "Testing Binner Bin"}]' --items '[{"w": 500, "h": 200, "d": 100, "id": "Testing Binner Item"}, {"w": 100, "h": 100, "d": 200, "id": "Testing Binner Item 2"}]'
-2016-11-25 18:20:47,577 Running algorithm single
-2016-11-25 18:20:47,577 Entering algorithm SINGLE
-2016-11-25 18:20:47,577 Trying to allocate items for bin: ebf38305-cf3a-4a74-b10f-4a0ecccf7dce
-2016-11-25 18:20:47,578 adding a box at: x: 0, mx: 500, y: 0, my: 500, z: 0, mz: 100
-2016-11-25 18:20:47,586 adding a box at: x: 500, mx: 600, y: 0, my: 100, z: 0, mz: 200
-2016-11-25 18:20:47,587 Trying to allocate items for bin: ebf38305-cf3a-4a74-b10f-4a0ecccf7dce
-2016-11-25 18:20:47,596 adding a box at: x: 0, mx: 500, y: 0, my: 500, z: 100, mz: 200
-2016-11-25 18:20:47,609 adding a box at: x: 600, mx: 700, y: 0, my: 100, z: 0, mz: 200
-{'packed': [{'bin': {'h': 1000, 'initial': {'h': 1000, 'd': 1000, 'w': 1000}, 'd': 1000, 'w': 1000, 'id': 'ebf38305-cf3a-4a74-b10f-4a0ecccf7dce'}, 'slots': [{'min_x': 0, 'min_y': 0, 'min_z': 0, 'item': {'h': 200, 'id': '27faac95-a76f-44e2-843a-8b0603ae4da7', 'w': 500, 'd': 100}, 'max_z': 100, 'id': '359d3784-b45a-4d5b-a631-2b2d2116840b', 'max_x': 500, 'max_y': 200}, {'min_x': 500, 'min_y': 0, 'min_z': 0, 'item': {'h': 100, 'id': 'f5206e2d-3314-4aa0-8901-891a5166934b', 'w': 100, 'd': 200}, 'max_z': 200, 'id': 'c8549991-02f9-4c7f-b987-072d3dcc00b6', 'max_x': 600, 'max_y': 100}, {'min_x': 0, 'min_y': 0, 'min_z': 100, 'item': {'h': 200, 'id': '27faac95-a76f-44e2-843a-8b0603ae4da7', 'w': 500, 'd': 100}, 'max_z': 200, 'id': '6a7fdf35-ade0-408d-8c9b-f14888b76826', 'max_x': 500, 'max_y': 200}, {'min_x': 600, 'min_y': 0, 'min_z': 0, 'item': {'h': 100, 'id': 'f5206e2d-3314-4aa0-8901-891a5166934b', 'w': 100, 'd': 200}, 'max_z': 200, 'id': 'e27356a2-47e9-4532-98dc-fc40c27ff98b', 'max_x': 700, 'max_y': 100}]}, {'bin': {'h': 1000, 'initial': {'h': 1000, 'd': 1000, 'w': 1000}, 'd': 1000, 'w': 1000, 'id': 'ebf38305-cf3a-4a74-b10f-4a0ecccf7dce'}, 'slots': [{'min_x': 0, 'min_y': 0, 'min_z': 0, 'item': {'h': 200, 'id': '27faac95-a76f-44e2-843a-8b0603ae4da7', 'w': 500, 'd': 100}, 'max_z': 100, 'id': '359d3784-b45a-4d5b-a631-2b2d2116840b', 'max_x': 500, 'max_y': 200}, {'min_x': 500, 'min_y': 0, 'min_z': 0, 'item': {'h': 100, 'id': 'f5206e2d-3314-4aa0-8901-891a5166934b', 'w': 100, 'd': 200}, 'max_z': 200, 'id': 'c8549991-02f9-4c7f-b987-072d3dcc00b6', 'max_x': 600, 'max_y': 100}, {'min_x': 0, 'min_y': 0, 'min_z': 100, 'item': {'h': 200, 'id': '27faac95-a76f-44e2-843a-8b0603ae4da7', 'w': 500, 'd': 100}, 'max_z': 200, 'id': '6a7fdf35-ade0-408d-8c9b-f14888b76826', 'max_x': 500, 'max_y': 200}, {'min_x': 600, 'min_y': 0, 'min_z': 0, 'item': {'h': 100, 'id': 'f5206e2d-3314-4aa0-8901-891a5166934b', 'w': 100, 'd': 200}, 'max_z': 200, 'id': 'e27356a2-47e9-4532-98dc-fc40c27ff98b', 'max_x': 700, 'max_y': 100}]}], 'lost': []}
+binner-cli --items '[{"w": 1000, "h": 1000, "d": 1000, "id":"TestingMyItem"}]' --bins '[{"w": 2000, "h": 2000, "d": 2000, "id": "TestingMyBin"}]' --algorithm single
+2016-11-25 18:39:07,159 Registering Entity
+2016-11-25 18:39:07,159 {u'h': 2000, u'd': 2000, u'w': 2000, u'id': u'TestingMyBin'}
+2016-11-25 18:39:07,160 Registering Entity
+2016-11-25 18:39:07,160 {u'h': 1000, u'd': 1000, u'w': 1000, u'id': u'TestingMyItem'}
+2016-11-25 18:39:07,160 Entering algorithm SINGLE
+2016-11-25 18:39:07,160 Trying to allocate items for bin: TestingMyBin
+2016-11-25 18:39:07,160 adding a box at: x: 0, mx: 1000, y: 0, my: 1000, z: 0, mz: 1000
+2016-11-25 18:39:07,160 Trying to allocate items for bin: TestingMyBin
+2016-11-25 18:39:07,201 adding a box at: x: 1000, mx: 2000, y: 0, my: 1000, z: 0, mz: 1000
+{'packed': [{'bin': {'h': 2000, 'initial': {'h': 2000, 'd': 2000, 'w': 2000}, 'd': 2000, 'w': 2000, 'id': u'TestingMyBin'}, 'slots': [{'min_x': 0, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '4d76936d-1502-4805-9fad-e05c16344872', 'max_x': 1000, 'max_y': 1000}, {'min_x': 1000, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '41291de0-a772-48a3-98f5-c8052cfec88f', 'max_x': 2000, 'max_y': 1000}]}, {'bin': {'h': 2000, 'initial': {'h': 2000, 'd': 2000, 'w': 2000}, 'd': 2000, 'w': 2000, 'id': u'TestingMyBin'}, 'slots': [{'min_x': 0, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '4d76936d-1502-4805-9fad-e05c16344872', 'max_x': 1000, 'max_y': 1000}, {'min_x': 1000, 'min_y': 0, 'min_z': 0, 'item': {'h': 1000, 'id': u'TestingMyItem', 'w': 1000, 'd': 1000}, 'max_z': 1000, 'id': '41291de0-a772-48a3-98f5-c8052cfec88f', 'max_x': 2000, 'max_y': 1000}]}], 'lost': []}
 ```
 
 Unit testing
