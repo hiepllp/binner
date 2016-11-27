@@ -1,4 +1,5 @@
 from . import log
+from .helpers import enumerate_json
 
 """
 A generic collection
@@ -6,7 +7,8 @@ class for the objects of
 bin and item type
 """
 class Collection(object):
-  def __init__(self, args):
+  def __init__(self, non_enumerated_args):
+    args = enumerate_json( non_enumerated_args )
     self.items = dict()
     self.tried = []
     self.it = 0

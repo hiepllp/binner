@@ -57,8 +57,8 @@ SERVER SPECIFIC
 """
   
   def run(self, args):
-      bins = BinCollection(enumerate_json(json.loads(args.bins)))
-      items = ItemCollection(enumerate_json(json.loads(args.items)))
+      bins = BinCollection(json.loads(args.bins))
+      items = ItemCollection(json.loads(args.items))
 
       if args.algorithm == 'single':
         binner_algo = AlgoSingle(args,bins,items)
