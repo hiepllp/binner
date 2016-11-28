@@ -98,7 +98,6 @@ class AlgoMulti(Algo):
 
         #item2 = itemcollection.nextsmallest()
     
-      self.binner.add_bin(curbin) 
       curbin.e_time = time.time()
 
     return self.binner  

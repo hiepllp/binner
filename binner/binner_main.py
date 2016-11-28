@@ -30,7 +30,7 @@ class Binner(object):
   @param bin
   """
   def add_bin(self, bin_):
-    self.packed_bins.append(bin_)
+	 pass
 
   """
   add an item we couldnt
@@ -39,7 +39,7 @@ class Binner(object):
   @param: item 
   """
   def add_lost(self, item):
-    self.lost_items.append(item)
+	 pass
 
   """
   get all the packed bins
@@ -47,8 +47,9 @@ class Binner(object):
   """
   def get_packed_bins(self):
     bins = []
-    for i in self.packed_bins:
-      bins.append(i.to_dict())
+    for bin_key,bin in self.bins.items.iteritems():
+      if bin.used:
+         bins.append(bin.to_dict())
 
     return bins
     
@@ -73,6 +74,7 @@ class Binner(object):
   algorithm
   """
   def show(self):
+    from . import log
     if self.args.algorithm == "smallest":
       smallest = self.get_smallest()
       if smallest:
@@ -84,8 +86,11 @@ class Binner(object):
       for k, item in self.items.items.iteritems():
 	  if not item.used:
 	      lost_items.append( item.to_dict() )
+      log.debug("Result for PACKED items")
       result = dict(lost=lost_items,
               packed=self.get_packed_bins())
+
+      log.debug( result )
 	
 
     return result

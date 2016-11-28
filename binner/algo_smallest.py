@@ -97,8 +97,6 @@ class AlgoSmallest(Algo):
           max_z=curd + item.d))
         curbin.append(slot)
         curbin.e_time =time.time()
-      self.binner.add_bin(curbin)
-      
     """
     to be the smallest bin we
     must allocate all space of the

@@ -96,7 +96,6 @@ class AlgoSingle(Algo):
         curbin.append(slot)
 
       curbin.e_time = time.time()
-      self.binner.add_bin(curbin)
 
     return self.binner
 
