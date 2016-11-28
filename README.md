@@ -1,5 +1,6 @@
 Binner - Quick And Dirty bin allocation
 ==========================================================
+![alt tag](http://infinitet3ch.com/img/binner-pic-1.png)
 
 binner is a quick way to find the best bin sizes for
 your items. You give it a set of bins and items, select
