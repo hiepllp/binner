@@ -1,5 +1,6 @@
 from .entity_object import EntityObject
 from .entity_artifact import EntityArtifact
+from . import log
 class Bin(EntityObject,EntityArtifact):
   fields = frozenset(('w', 'h', 'd', 'max_wg', 'id', 'used'))
 
@@ -38,10 +39,16 @@ class Bin(EntityObject,EntityArtifact):
   """
   def get_min_level_size(self, coord):
     sizes = []
-    for i in self.slots:  
-      sizes.append(getattr(i, 'max_' + coord))
+    log.debug("Getting min level size for %s"%(coord))
+    log.debug("Amount of slots %d"%(len(self.slots)))
+    if len( self.slots ) > 0:
+	    for i in self.slots:  
+	      log.debug("Found slot size")
+	      log.debug(i)
+	      sizes.append(getattr(i, 'max_' + coord))
 
-    return min(sizes)
+	    return min(sizes)
+    return 0
   
       
   """
@@ -170,6 +177,13 @@ class Bin(EntityObject,EntityArtifact):
   def space_taken(self):
     pass
   def can_fit( self, item ) :
-	 if  (item.w > self.w) or (item.h > self.h) or (item.d > self.d ):
+	 max_x = self.get_max_level_size("x")
+	 max_y = self.get_max_level_size("y")
+	 max_z = self.get_max_level_size("z")
+	 item_max_x = (max_x+item.w)
+	 item_max_y = (max_x+item.h)
+	 item_max_z = (max_x+item.d)
+	 if  (item_max_x > self.w) or (item_max_y > self.h) or (item_max_z > self.d ):
 		return False
 	 return True
+

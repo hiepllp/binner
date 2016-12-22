@@ -27,3 +27,8 @@ refactoring
 -------------------------------
 Rework existing code
 Add --multi-use-smallest-bins for "multi" algorithm
+
+0.6.1
+------------------------------
+Minor patch for get_max_level_size/1. Patch addresses erronous bin overflow
+
