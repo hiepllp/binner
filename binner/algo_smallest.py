@@ -1,6 +1,7 @@
 from .algo import Algo
 from .entity_slot import Slot
 from . import log
+from .exception import DistributionException
 import time
 class AlgoSmallest(Algo):
   """
@@ -25,7 +26,8 @@ class AlgoSmallest(Algo):
     log.debug("Entering Algorithm SMALLEST")
     bincollection = self.bins
     itemcollection = self.items
-    assert(bincollection.count() > 0 and itemcollection.count() > 0)
+    if not (bincollection.count() > 0 and itemcollection.count() > 0):
+	 raise DistributionException("Please provide atleast one bin and item")
     curbin = bincollection.next()
     first = True
     while curbin != None:

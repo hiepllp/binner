@@ -1,6 +1,7 @@
 from .algo import Algo
 from .entity_slot import Slot
 from  . import log
+from .exception import DistributionException
 import time
 class AlgoSingle(Algo):
   """
@@ -18,7 +19,8 @@ class AlgoSingle(Algo):
     log.debug("Entering algorithm SINGLE")
     bincollection = self.bins
     itemcollection =self.items
-    assert(len(bincollection.items) == 1)
+    if len(bincollection.items) == 0 or len(bincollection.items) > 1:
+	 raise DistributionException("Single takes only one item")
 
     curbin = bincollection.next()
     first = True

@@ -2,6 +2,7 @@
 from .algo import Algo 
 from .entity_slot import Slot
 from . import log
+from .exception import DistributionException
 
 import time
 class AlgoMulti(Algo):
@@ -10,6 +11,7 @@ class AlgoMulti(Algo):
   bins. Bins should follow FIFO
         algorithm
 
+	
   @param itemcollection: set of items
   @returns bins with items
   """ 
@@ -17,7 +19,8 @@ class AlgoMulti(Algo):
     log.debug("Entering Algorithm MULTI")
     itemcollection = self.items
     bincollection = self.bins
-    assert(itemcollection.size() >= bincollection.size())
+    if not itemcollection.size() >= bincollection.size():
+	 raise DistributionException("Bins should be less than items")
 
     curbin = self.get_next_bin()
     bincollection.it = 1
