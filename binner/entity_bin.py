@@ -39,13 +39,9 @@ class Bin(EntityObject,EntityArtifact):
   """
   def get_min_level_size(self, coord):
     sizes = []
-    log.debug("Getting min level size for %s"%(coord))
-    log.debug("Amount of slots %d"%(len(self.slots)))
     if len( self.slots ) > 0:
 	    for i in self.slots:  
-	      log.debug("Found slot size")
-	      log.debug(i)
-	      sizes.append(getattr(i, 'max_' + coord))
+	      sizes.append(getattr(i, 'min_' + coord))
 
 	    return min(sizes)
     return 0
@@ -59,11 +55,13 @@ class Bin(EntityObject,EntityArtifact):
   """ 
   def get_max_level_size(self, coord):
     sizes = []
-    for i in self.slots:  
-      sizes.append(getattr(i, 'max_' + coord))
+    sizes = []
+    if len( self.slots ) > 0:
+	    for i in self.slots:  
+	      sizes.append(getattr(i, 'max_' + coord))
 
-    return max(sizes)
-
+	    return max(sizes)
+    return 0
 
   """
   returns the mininum amount needed
