@@ -19,8 +19,9 @@ class Binner(object):
   packed_bins = []
   smallest = {} ## only available when algorithm find_smallest is ran
 
-  def __init__(self, args, bins, items ):
+  def __init__(self, args, id, bins, items ):
 	self.args =  args
+	self.id = id
 	self.bins = bins
 	self.items = items
 
@@ -88,6 +89,7 @@ class Binner(object):
 	      lost_items.append( item.to_dict() )
       log.debug("Result for PACKED items")
       result = dict(lost=lost_items,
+		run=dict(id=self.id),
               packed=self.get_packed_bins())
 
       log.debug( result )

@@ -20,8 +20,8 @@ vertically, and horizontal for a optimal fit.
 
 """
 class Algo(object):
-  def __init__(self, args, bins, items):
-    self.binner = Binner(args, bins, items )
+  def __init__(self, args,id, bins, items):
+    self.binner = Binner(args, id,bins, items )
     self.args = args
     self.bins = bins
     self.items = items
