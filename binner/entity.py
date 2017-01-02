@@ -11,7 +11,7 @@ class Entity(object):
       setattr(self, k, v)
     """ if we have an id use it otherwise generate one """
     if not "id" in args.keys():
-       from uuid import uuid4
-       setattr(self, "id", str(uuid4()))
+       from .helpers import get_a_binner_id
+       setattr(self, "id", get_a_binner_id())
     self.slots = []
     self.items = []

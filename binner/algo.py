@@ -19,8 +19,11 @@ creating another level. Additionally try to rotate
 vertically, and horizontal for a optimal fit.
 
 """
+from .helpers import get_a_binner_id
+
 class Algo(object):
-  def __init__(self, args,id, bins, items):
+  def __init__(self, args, bins, items, id=None):
+    id = id or get_a_binner_id()
     self.binner = Binner(args, id,bins, items )
     self.args = args
     self.bins = bins

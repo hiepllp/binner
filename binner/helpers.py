@@ -9,6 +9,10 @@ def enumerate_json(json):
     c+=1 
 
   return o
+ 
+def get_a_binner_id():
+   from uuid import uuid4
+   return str(uuid4())
 
 
 

@@ -4,7 +4,7 @@ from .algo_multi import AlgoMulti
 from .algo_single import AlgoSingle
 from .collection_bin import BinCollection
 from .collection_item import ItemCollection
-from helpers import enumerate_json
+from helpers import enumerate_json, get_a_binner_id
 from uuid import uuid4
 import json
 import argparse
@@ -38,7 +38,7 @@ class RuntimeCLI(Runtime):
 	 parser.add_argument("--multi-use-smallest-bins",help="Use the smallest bins",action="store_true")
 	 parser.add_argument("--bins", help="Bins to specify")
 	 parser.add_argument("--items", help="Items to specify")
-	 parser.add_argument("--id", help="A transaction ID defaults to a unique id", default=str( uuid4() ))
+	 parser.add_argument("--id", help="A transaction ID defaults to a unique id", default=get_a_binner_id())
 	 parser.add_argument("--host", help="Host to run API on", default="0.0.0.0")
 	 parser.add_argument("--port", help="Port to run API on", default=9100)
 	 result = parser.parse_args()
@@ -64,11 +64,11 @@ SERVER SPECIFIC
       id = args.id
 
       if args.algorithm == 'single':
-        binner_algo = AlgoSingle(args,id,bins,items)
+        binner_algo = AlgoSingle(args,bins,items,id=id)
       elif args.algorithm == 'multi':
-        binner_algo = AlgoMulti(args,id,bins,items)
+        binner_algo = AlgoMulti(args,bins,items, id=id)
       elif args.algorithm == "smallest":
-        binner_algo = AlgoSmallest(args,id,bins,items)
+        binner_algo = AlgoSmallest(args,bins,items, id=id)
       binner_algo.run()
       print binner_algo.binner.show()
 
